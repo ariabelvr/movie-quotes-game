@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
@@ -24,7 +24,7 @@ app.use(cors({
 const quoteGame = new MovieQuoteGame(movieQuotes);
 
 // Game endpoints
-app.post('/game/start', (req, res) => {
+app.post('/game/start', (req: Request, res: Response) => {
   const result = quoteGame.startGame();
   if (result.success) {
     // Emit through the notifications system
@@ -38,7 +38,7 @@ app.post('/game/start', (req, res) => {
   res.json(result);
 });
 
-app.post('/game/guess', (req, res) => {
+app.post('/game/guess', (req: Request, res: Response) => {
   const { user, guess } = req.body;
   if (!user || !guess) {
     return res.status(400).json({ 
@@ -63,7 +63,7 @@ app.post('/game/guess', (req, res) => {
   res.json(result);
 });
 
-app.get('/game/status', (req, res) => {
+app.get('/game/status', (req: Request, res: Response) => {
   res.json(quoteGame.getCurrentState());
 });
 
@@ -87,7 +87,7 @@ io.on('connection', (socket) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 7426;
+const PORT = process.env.PORT || 4501;
 httpServer.listen(PORT, () => {
   console.log(`Movie Quotes Game server running on port ${PORT}`);
 }); 

@@ -1,91 +1,112 @@
-interface MovieQuote {
-  quote: string;
-  answer: string;
-}
+import { MovieQuote, movieQuotes } from './quotes';
 
 interface GameState {
   isActive: boolean;
   currentQuote: MovieQuote | null;
-  lastQuoteTime: number;
-  cooldownPeriod: number; // in milliseconds
+  startTime: Date | null;
+  attempts: number;
 }
 
-const quotes: MovieQuote[] = [
-  // ... quotes will be loaded from a separate file
-];
+interface GameResult {
+  success: boolean;
+  message?: string;
+  quote?: MovieQuote;
+  correct?: boolean;
+}
 
-class MovieQuoteGame {
-  private gameState: GameState = {
-    isActive: false,
-    currentQuote: null,
-    lastQuoteTime: 0,
-    cooldownPeriod: 300000, // 5 minutes cooldown
-  };
+export class MovieQuoteGame {
+  private quotes: MovieQuote[];
+  private state: GameState;
+  private cooldownPeriod: number = 300000; // 5 minutes in milliseconds
 
-  constructor(quotesData: MovieQuote[]) {
-    quotes.push(...quotesData);
-  }
-
-  public startGame(): { success: boolean; message: string; quote?: string } {
-    if (this.gameState.isActive) {
-      return { success: false, message: 'A game is already in progress!' };
-    }
-
-    const now = Date.now();
-    if (now - this.gameState.lastQuoteTime < this.gameState.cooldownPeriod) {
-      const remainingTime = Math.ceil((this.gameState.cooldownPeriod - (now - this.gameState.lastQuoteTime)) / 1000);
-      return { 
-        success: false, 
-        message: `Please wait ${remainingTime} seconds before starting a new game.`
-      };
-    }
-
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    this.gameState.currentQuote = quotes[randomIndex];
-    this.gameState.isActive = true;
-    this.gameState.lastQuoteTime = now;
-
-    return {
-      success: true,
-      message: 'New quote challenge started!',
-      quote: this.gameState.currentQuote.quote
+  constructor(quotes: MovieQuote[]) {
+    this.quotes = quotes;
+    this.state = {
+      isActive: false,
+      currentQuote: null,
+      startTime: null,
+      attempts: 0
     };
   }
 
-  public makeGuess(guess: string): { success: boolean; message: string; correct: boolean } {
-    if (!this.gameState.isActive || !this.gameState.currentQuote) {
-      return { 
-        success: false, 
-        message: 'No active quote challenge!', 
-        correct: false 
+  public startGame(): GameResult {
+    // Check if game is already active
+    if (this.state.isActive) {
+      return {
+        success: false,
+        message: 'A game is already in progress'
       };
     }
 
+    // Check cooldown period
+    if (this.state.startTime) {
+      const timeSinceLastGame = Date.now() - this.state.startTime.getTime();
+      if (timeSinceLastGame < this.cooldownPeriod) {
+        const remainingTime = Math.ceil((this.cooldownPeriod - timeSinceLastGame) / 1000);
+        return {
+          success: false,
+          message: `Please wait ${remainingTime} seconds before starting a new game`
+        };
+      }
+    }
+
+    // Select a random quote
+    const randomIndex = Math.floor(Math.random() * this.quotes.length);
+    const quote = this.quotes[randomIndex];
+
+    // Update game state
+    this.state = {
+      isActive: true,
+      currentQuote: quote,
+      startTime: new Date(),
+      attempts: 0
+    };
+
+    return {
+      success: true,
+      quote: quote
+    };
+  }
+
+  public makeGuess(guess: string): GameResult {
+    if (!this.state.isActive || !this.state.currentQuote) {
+      return {
+        success: false,
+        message: 'No active game'
+      };
+    }
+
+    this.state.attempts++;
+
+    // Normalize the guess for comparison
     const normalizedGuess = guess.toLowerCase().trim();
-    const normalizedAnswer = this.gameState.currentQuote.answer.toLowerCase();
+    const normalizedAnswer = this.state.currentQuote.movie.toLowerCase().trim();
 
     const isCorrect = normalizedGuess === normalizedAnswer;
 
     if (isCorrect) {
-      this.gameState.isActive = false;
-      this.gameState.currentQuote = null;
-      return {
-        success: true,
-        message: 'Correct answer!',
-        correct: true
-      };
+      this.state.isActive = false;
     }
 
     return {
       success: true,
-      message: 'Wrong answer, try again!',
-      correct: false
+      correct: isCorrect,
+      message: isCorrect 
+        ? `Correct! The movie was "${this.state.currentQuote.movie}" (${this.state.currentQuote.year})`
+        : 'Incorrect guess, try again!'
     };
   }
 
   public getCurrentState(): GameState {
-    return { ...this.gameState };
+    return { ...this.state };
   }
-}
 
-export { MovieQuoteGame, MovieQuote, GameState }; 
+  public endGame(): void {
+    this.state = {
+      isActive: false,
+      currentQuote: null,
+      startTime: this.state.startTime,
+      attempts: this.state.attempts
+    };
+  }
+} 

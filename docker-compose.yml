@@ -10,6 +10,7 @@ services:
       - "4501:4501"
     environment:
       - NODE_ENV=development
+      - PORT=4501
     env_file:
       - /home/ariabel/coding/stream/notifications/.env
     networks:
