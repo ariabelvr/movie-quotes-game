@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  movie-quotes:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - /home/ariabel/coding/stream/notifications/.env
+    networks:
+      - stream-network
+
+networks:
+  stream-network:
+    name: stream-network
+    external: true 
