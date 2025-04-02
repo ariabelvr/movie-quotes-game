@@ -1,0 +1,344 @@
+:root {
+  --neon-pink: #ff2a6d;
+  --neon-blue: #05d9e8;
+  --neon-purple: #b026ff;
+  --neon-yellow: #fee800;
+  --neon-gold: #ffd700;
+  --neon-green: #00ff00;
+  --dark-bg: rgba(10, 10, 10, 0.8);
+  --grid-color: rgba(5, 217, 232, 0.2);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  font-family: 'Orbitron', sans-serif;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.cyberpunk-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  pointer-events: none;
+}
+
+.status {
+  background: var(--dark-bg);
+  padding: 12px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: fadeInOut 3s forwards;
+}
+
+.notification {
+  position: relative;
+  background: var(--dark-bg);
+  border: 2px solid var(--neon-blue);
+  padding: 20px;
+  border-radius: 6px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 30px rgba(5, 217, 232, 0.3);
+  animation: slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: right center;
+}
+
+.notification.follow {
+  border-color: var(--neon-green);
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+}
+
+.notification.subscribe {
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 30px rgba(5, 217, 232, 0.3);
+}
+
+.notification.join {
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 30px rgba(255, 42, 109, 0.3);
+}
+
+.notification.legend {
+  border-width: 3px;
+  border-color: var(--neon-gold);
+  box-shadow: 
+    0 0 30px rgba(255, 215, 0, 0.4),
+    inset 0 0 20px rgba(255, 215, 0, 0.2);
+  animation: legendSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+             legendPulse 2s infinite;
+}
+
+.notification.game {
+  --neon-color: #ff00ff;
+  border: 2px solid var(--neon-color);
+  box-shadow: 0 0 10px var(--neon-color),
+              0 0 20px var(--neon-color),
+              0 0 30px var(--neon-color);
+  animation: fadeIn 0.5s ease-in;
+}
+
+.notification.game.correct {
+  --neon-color: #00ff00;
+  border: 2px solid var(--neon-color);
+  box-shadow: 0 0 10px var(--neon-color),
+              0 0 20px var(--neon-color),
+              0 0 30px var(--neon-color);
+  animation: pulseCorrect 1s ease-in-out;
+}
+
+.notification.game.incorrect {
+  --neon-color: #ff0000;
+  border: 2px solid var(--neon-color);
+  box-shadow: 0 0 10px var(--neon-color),
+              0 0 20px var(--neon-color),
+              0 0 30px var(--neon-color);
+  animation: shake 0.5s ease-in-out;
+}
+
+.notification-content {
+  position: relative;
+  z-index: 1;
+}
+
+.glitch-text {
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  animation: typing 1s steps(30, end) forwards;
+}
+
+.follow .glitch-text {
+  color: var(--neon-green);
+  text-shadow: 0 0 10px var(--neon-green);
+}
+
+.subscribe .glitch-text {
+  color: var(--neon-blue);
+  text-shadow: 0 0 10px var(--neon-blue);
+}
+
+.join .glitch-text {
+  color: var(--neon-pink);
+  text-shadow: 0 0 10px var(--neon-pink);
+}
+
+.user-name {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 15px rgba(254, 232, 0, 0.7);
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  animation: typing 0.5s 1s steps(30, end) forwards;
+}
+
+.legend .user-name {
+  font-size: 28px;
+  color: var(--neon-gold);
+  text-shadow: 
+    0 0 10px var(--neon-gold),
+    0 0 20px var(--neon-gold);
+  letter-spacing: 2px;
+}
+
+.tier {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--neon-blue);
+  text-shadow: 0 0 10px var(--neon-blue);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  animation: typing 0.5s 1.5s steps(30, end) forwards;
+}
+
+.cyber-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(var(--grid-color) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, var(--grid-color) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  opacity: 0.3;
+  z-index: 0;
+  animation: gridPulse 4s infinite;
+}
+
+.legend .cyber-grid {
+  background-image: 
+    linear-gradient(rgba(255, 215, 0, 0.2) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, rgba(255, 215, 0, 0.2) 1.5px, transparent 1.5px);
+  opacity: 0.4;
+  animation: legendGridPulse 4s infinite;
+}
+
+.slide-in {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+  }
+}
+
+@keyframes gridPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes legendSlideIn {
+  0% {
+    transform: translateX(120%) scale(0.9);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(-5%) scale(1.05);
+  }
+  75% {
+    transform: translateX(2%) scale(0.98);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes legendPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 30px rgba(255, 215, 0, 0.4),
+      inset 0 0 20px rgba(255, 215, 0, 0.2);
+  }
+  50% {
+    box-shadow: 
+      0 0 50px rgba(255, 215, 0, 0.6),
+      inset 0 0 30px rgba(255, 215, 0, 0.3);
+  }
+}
+
+@keyframes legendGlitch {
+  0%, 100% { 
+    transform: none;
+    opacity: 1;
+    text-shadow: 
+      0 0 10px var(--neon-gold),
+      0 0 20px var(--neon-gold),
+      0 0 30px var(--neon-gold);
+  }
+  10% {
+    transform: skew(-1deg, -1deg);
+    opacity: 0.9;
+    text-shadow: 
+      0 0 10px var(--neon-gold),
+      0 0 20px var(--neon-gold),
+      0 0 30px var(--neon-gold),
+      -10px 0 40px var(--neon-gold);
+  }
+  20% {
+    transform: none;
+    opacity: 1;
+    text-shadow: 
+      0 0 10px var(--neon-gold),
+      0 0 20px var(--neon-gold),
+      0 0 30px var(--neon-gold);
+  }
+  30% {
+    transform: skew(1deg, 1deg);
+    opacity: 0.9;
+    text-shadow: 
+      0 0 10px var(--neon-gold),
+      0 0 20px var(--neon-gold),
+      0 0 30px var(--neon-gold),
+      10px 0 40px var(--neon-gold);
+  }
+}
+
+@keyframes legendGridPulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+@keyframes pulseCorrect {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes typeWriter {
+  from { width: 0; }
+  to { width: 100%; }
+} 
