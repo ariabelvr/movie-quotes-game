@@ -1,22 +1,23 @@
+version: '3.8'
+
 services:
-  movie-quotes:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - "4501:4501"
-    environment:
-      - NODE_ENV=development
-      - PORT=4501
+  movie-quotes-bot:
+    build: .
+    container_name: movie-quotes-bot
+    restart: unless-stopped
     env_file:
-      - /home/ariabel/coding/stream/notifications/.env
+      - .env
     networks:
-      - traefik_net
+      - stream-network
+    volumes:
+      - ./logs:/app/logs
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
-  traefik_net:
-    name: traefik_net
+  stream-network:
+    name: stream-network
     external: true 

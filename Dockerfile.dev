@@ -6,8 +6,7 @@ WORKDIR /usr/src/app
 
 # Install app dependencies
 COPY package*.json ./
-RUN npm install && \
-    npm install --save-dev @types/express @types/node @types/socket.io @types/cors
+RUN npm install
 
 # Copy app source
 COPY . .

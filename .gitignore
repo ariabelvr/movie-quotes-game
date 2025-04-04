@@ -11,23 +11,31 @@ build/
 # Environment variables
 .env
 .env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*.local
 
-# IDE
-.vscode/
+# IDE and editor files
 .idea/
+.vscode/
 *.swp
 *.swo
+.DS_Store
+Thumbs.db
 
 # Logs
 logs/
 *.log
 
-# Testing
+# Test coverage
 coverage/
 
-# OS
-.DS_Store
-Thumbs.db 
+# Docker volumes
+docker-data/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Debug files
+.node-version
+.nvmrc 

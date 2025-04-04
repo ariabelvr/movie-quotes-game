@@ -1,21 +1,19 @@
 # Use Node.js LTS version
 FROM node:20-slim
 
-# Create app directory
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Install app dependencies
+# Copy package files
 COPY package*.json ./
-RUN npm ci --only=production
 
-# Copy app source
+# Install dependencies
+RUN npm install
+
+# Copy source code
 COPY . .
 
 # Build TypeScript code
 RUN npm run build
 
-# Expose port
-EXPOSE 4501
-
-# Start the server
-CMD [ "npm", "start" ] 
+# Start the bot
+CMD ["node", "dist/server.js"] 
